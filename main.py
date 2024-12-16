@@ -36,7 +36,16 @@ class ReservationTicket:
         Hotel Name: {self.hotel.name}
         """
         return content
-
+    
+class SpaReservationTicket(ReservationTicket):
+    def generate(self):
+        content = f"""
+        Thank you for your spa reservation!
+        Here is your aps booking data:
+        Name: {self.customer_name}
+        Hotel Name: {self.hotel.name}
+        """
+        return content
 
 class CreditCard:
     def __init__(self, number):
@@ -53,11 +62,8 @@ class CreditCard:
 
 class SecureCreditCard(CreditCard):
     def authenticate(self, given_password):
-        password = df_cards_security.loc[df_cards_security["number"] == self.number, "password"].squeeze()
-        print(type(password))
-        print(password)
-        print(type(given_password))
-        print(given_password)
+        password = df_cards_security.loc[
+            df_cards_security["number"] == self.number, "password"].squeeze()
         if password == given_password:
             return True
         else:
@@ -76,6 +82,14 @@ if hotel.available():
             reservation_ticket = ReservationTicket(customer_name=name, 
                                                 hotel_object=hotel)
             print(reservation_ticket.generate())
+            spa_package = input("Would you like to book a spa package? (y/n) ")
+            if spa_package == "y":
+                spa_reservation_ticket = SpaReservationTicket(
+                                                customer_name=name, 
+                                                hotel_object=hotel)
+                print(spa_reservation_ticket.generate())
+            else:
+                print("No spa reservation")
         else:
             print("Credit card authentication failed")
     else:
